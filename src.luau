@@ -635,9 +635,13 @@ local Deserialize = (function()
 
 	return function(b)
 		local s = luau_newsettings()
-		--s.decodeOp = function(x) return (x * 203) % 256 end
+		s.decodeOp = function(x) return (x * 203) % 256 end
 
-		return luau_deserialize(b--[[, s]])
+		local a, b = pcall(luau_deserialize, b)
+		if a == false then
+			a, b = pcall(luau_deserialize, b, s)
+		end
+		return b
 	end
 end)()
 
